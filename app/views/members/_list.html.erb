@@ -1,0 +1,9 @@
+<ul>
+
+  <% @members.each do |member| %>
+    <li>
+      <%= member.first_name %> <%= member.last_name %> - <%= member.email %>
+      <%= link_to 'Remove', team_member_path(@team, member), method: :delete, data: { confirm: 'Are you sure?' } %>
+    </li>
+  <% end %>
+</ul>

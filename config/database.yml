@@ -1,0 +1,24 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+  username: iramfatima
+  password: '12345678'
+  host: localhost
+
+development:
+  <<: *default
+  database: team_management_system_development
+
+test:
+  <<: *default
+  database: team_management_system_test
+
+production:
+  <<: *default
+  database: team_management_system_production
+  username: <%= ENV['PG_USERNAME'] %>
+  password: <%= ENV['PG_PASSWORD'] %>
+  host: <%= ENV['PG_HOST'] || 'localhost' %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 10 } %>

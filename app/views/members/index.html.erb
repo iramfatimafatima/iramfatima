@@ -1,0 +1,6 @@
+<h2>Members of <%= @team.name %></h2>
+
+<%= render 'form' %>  <!-- Add member form -->
+<%= render 'list' %>  <!-- List of members -->
+
+<%= link_to 'Back to Team', team_path(@team) %>
