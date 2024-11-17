@@ -1,41 +1,54 @@
 <%= form_with model: @team, local: true, class: "form-container" do |form| %>
-  <!-- Team Name Section -->
-  <div class="form-group">
-    <%= form.label :name, "Team Name", class: "form-label" %>
-    <%= form.text_field :name, required: true, class: "form-control" %>
-  </div>
+  <div class="container">
+    <!-- Centered Form -->
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header text-center">
+            <h3>Update Team</h3>
+          </div>
+          <div class="card-body">
+            <!-- Team Name Section -->
+            <div class="form-group">
+              <%= form.label :name, "Team Name", class: "form-label" %>
+              <%= form.text_field :name, required: true, class: "form-control" %>
+            </div>
 
-  <!-- Team Description Section -->
-  <div class="form-group">
-    <%= form.label :description, "Team Description", class: "form-label" %>
-    <%= form.text_area :description, required: true, class: "form-control" %>
-  </div>
+            <!-- Team Description Section -->
+            <div class="form-group">
+              <%= form.label :description, "Team Description", class: "form-label" %>
+              <%= form.text_area :description, required: true, class: "form-control" %>
+            </div>
 
-  <h3>Team Members</h3>
-  <%= form.label :members, "Select members to add to the team", class: "form-label" %>
+            <h5 class="mt-4">Team Members</h5>
+            <%= form.label :members, "Select members to add to the team", class: "form-label" %>
 
-  <!-- Members Dropdown (Allow existing members to be selected) -->
-  <% if @users.any? %>
-    <div class="form-group">
-      <%= select_tag 'members[]', options_from_collection_for_select(@users, :id, :email, @team.users.pluck(:id)), multiple: true, class: "form-control" %>
+            <!-- Members Dropdown (Allow existing members to be selected) -->
+            <% if @users.any? %>
+              <div class="form-group">
+                <%= select_tag 'members[]', options_from_collection_for_select(@users, :id, :email, @team.users.pluck(:id)), multiple: true, class: "form-control" %>
+              </div>
+            <% else %>
+              <p>No users available to add to the team.</p>
+            <% end %>
+
+            <h5 class="mt-4">Team Owner</h5>
+            <% if @users.any? %>
+              <div class="form-group">
+                <%= form.label :owner_id, "Select the team owner", class: "form-label" %>
+                <%= form.select :owner_id, options_from_collection_for_select(@users, :id, :email, @team.owner_id), prompt: "Select an owner", class: "form-control" %>
+              </div>
+            <% else %>
+              <p>No users available to assign as owner.</p>
+            <% end %>
+
+            <!-- Submit Button -->
+            <div class="text-center mt-4">
+              <%= form.submit "Update Team", class: "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  <% else %>
-    <p>No users available to add to the team.</p>
-  <% end %>
-
-  <!-- Owner Dropdown (Pre-select current team owner) -->
-  <h3>Team Owner</h3>
-  <% if @users.any? %>
-    <div class="form-group">
-      <%= form.label :owner_id, "Select the team owner", class: "form-label" %>
-      <%= form.select :owner_id, options_from_collection_for_select(@users, :id, :email, @team.owner_id), prompt: "Select an owner", class: "form-control" %>
-    </div>
-  <% else %>
-    <p>No users available to assign as owner.</p>
-  <% end %>
-
-  <!-- Submit Button -->
-  <div>
-    <%= form.submit "Update Team", class: "btn btn-primary" %>
   </div>
 <% end %>

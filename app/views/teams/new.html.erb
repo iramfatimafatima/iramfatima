@@ -13,7 +13,18 @@
     <%= form.text_area :description, required: true, class: "form-control" %>
   </div>
 
-  <h3>Team Members</h3>
+  <!-- Owner Dropdown -->
+  <h5>Team Owner</h5>
+  <% if @users.any? %>
+    <div class="form-group">
+    <%= form.label :owner_id, "Select the team owner", class: "form-label" %>
+    <%= form.select :owner_id, options_from_collection_for_select(@users, :id, lambda { |user| "#{user.first_name} #{user.last_name}".strip.presence || user.email }), prompt: "Select an owner", class: "form-control" %>
+  </div>
+  <% else %>
+    <p>No users available to assign as owner.</p>
+  <% end %>
+
+  <h5>My Network</h5>
   <%= form.label :members, "Select members to add to the team", class: "form-label" %>
 
   <!-- Members Dropdown -->
@@ -23,17 +34,6 @@
     </div>
   <% else %>
     <p>No users available to add to the team.</p>
-  <% end %>
-
-  <!-- Owner Dropdown -->
-  <h3>Team Owner</h3>
-  <% if @users.any? %>
-    <div class="form-group">
-      <%= form.label :owner_id, "Select the team owner", class: "form-label" %>
-      <%= form.select :owner_id, options_from_collection_for_select(@users, :id, :email), prompt: "Select an owner", class: "form-control" %>
-    </div>
-  <% else %>
-    <p>No users available to assign as owner.</p>
   <% end %>
 
   <!-- Submit Button -->

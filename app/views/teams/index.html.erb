@@ -1,144 +1,34 @@
-<h1>Your Teams</h1>
+<h1 class="text-center my-4">Teams</h1>
 
-<%= link_to 'Create New Team', new_team_path, class: 'btn btn-primary' %>
+<div class="container">
+  <!-- Create New Team Button -->
+  <div class="text-center mb-4">
+    <%= link_to 'Create New Team', new_team_path, class: 'btn btn-primary' %>
+  </div>
 
-<div class="teams-list">
-  <ul>
-    <% @teams.each do |team| %>
-      <li class="team-item">
-        <%= link_to team.name, team_path(team), class: 'team-name' %>
-        
-        <div class="team-actions">
-          (<%= link_to 'Edit', edit_team_path(team), class: 'btn btn-warning btn-sm' %> | 
-          <%= link_to 'Delete', team_path(team), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>)
-        </div>
-      </li>
-    <% end %>
-  </ul>
+  <!-- Logout Button -->
+  <% if user_signed_in? %>
+    <div class="text-center mb-4">
+      <%= link_to 'Logout', destroy_user_session_path, method: :delete, data: { confirm: 'Are you sure you want to log out?' }, class: 'btn btn-danger' %>
+    </div>
+  <% end %>
+
+  <!-- Teams List -->
+  <div class="teams-list">
+    <ul class="list-group">
+      <% @teams.each do |team| %>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <!-- Team Name -->
+          <%= link_to team.name, team_path(team), class: 'team-name' %>
+
+          <!-- Team Actions (Edit and Delete) -->
+          <div class="team-actions">
+            <%= link_to 'Edit', edit_team_path(team), class: 'btn btn-warning btn-sm' %>
+            <%= link_to 'Delete', team_path(team), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 </div>
 
-<style>
-    /* General Styling for Body and Heading */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
-}
-
-h1 {
-  text-align: center;
-  font-size: 2rem;
-  color: #333;
-  margin-top: 20px;
-}
-
-/* Create New Team Button */
-.btn.btn-primary {
-  display: inline-block;
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 1rem;
-  margin: 20px auto;
-  text-align: center;
-}
-
-.btn.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-/* Teams List Styling */
-.teams-list {
-  margin: 0 auto;
-  max-width: 900px;
-  padding: 0 15px;
-}
-
-.teams-list ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.team-item {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 10px 0;
-  padding: 20px;
-  transition: transform 0.3s ease;
-}
-
-.team-item:hover {
-  transform: translateY(-5px);
-}
-
-/* Styling for Team Name Link */
-.team-name {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #007bff;
-  text-decoration: none;
-  display: inline-block;
-  margin-bottom: 10px;
-}
-
-.team-name:hover {
-  text-decoration: underline;
-}
-
-/* Team Actions (Edit & Delete) Section */
-.team-actions {
-  font-size: 0.875rem;
-  color: #777;
-  margin-top: 10px;
-}
-
-.team-actions a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.team-actions a:hover {
-  text-decoration: underline;
-}
-
-/* Button Styling */
-.btn {
-  display: inline-block;
-  padding: 8px 12px;
-  font-size: 0.875rem;
-  text-decoration: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-/* Warning Button (Edit) */
-.btn-warning {
-  background-color: #ffc107;
-  color: #333;
-}
-
-.btn-warning:hover {
-  background-color: #e0a800;
-}
-
-/* Danger Button (Delete) */
-.btn-danger {
-  background-color: #dc3545;
-  color: #fff;
-}
-
-.btn-danger:hover {
-  background-color: #c82333;
-}
-
-.btn-sm {
-  font-size: 0.75rem;
-  padding: 5px 10px;
-}
-
-</style>

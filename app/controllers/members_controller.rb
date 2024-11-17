@@ -5,12 +5,10 @@ class MembersController < ApplicationController
 
   
     def index
-        debugger
       @members = @team.members
     end
 
     def show
-        debugger
         @member = Member.find(params[:id])
     end
   

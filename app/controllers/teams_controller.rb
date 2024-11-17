@@ -1,8 +1,9 @@
 class TeamsController < ApplicationController
-    before_action :authenticate_user!
-    before_action :set_team
-    before_action :authorize_owner!, only: [:edit, :update, :destroy]
-  
+  before_action :authenticate_user!
+  before_action :set_team, only: [:show, :edit, :update, :destroy, :add_member, :remove_member]
+  before_action :authorize_owner, only: [:edit, :update, :destroy, :add_member, :remove_member]
+  before_action :authorize_member, only: [:show]
+
     def index
         @users = User.all
       @teams = current_user.owned_teams
@@ -23,22 +24,18 @@ class TeamsController < ApplicationController
   
     
     def create
-        @team = current_user.owned_teams.build(team_params)
-        if @team.save
-          # Add selected members to the team
-          debugger
+      @team = current_user.owned_teams.build(team_params)
+      if @team.save
+        if params[:members].present? && params[:members].is_a?(Array)
           params[:members].each do |member_id|
-            debugger
-            # @team.members.create(user_id: member_id)
-            Member.create(team_id: @team.id, user_id: member_id)  
+            Member.create(team_id: @team.id, user_id: member_id)
           end
-          redirect_to @team, notice: 'Team created successfully.'
-        else
-          render :new
         end
+        redirect_to @team, notice: 'Team created successfully.'
+      else
+        render :new
       end
-
-
+    end
 
     def edit
         @team = Team.find(params[:id]) 
@@ -47,7 +44,6 @@ class TeamsController < ApplicationController
 
 
     def search_members
-        
         @members = if params[:last_name].present?
                      @team.users.where("last_name LIKE ?", "%#{params[:last_name]}%")
                    else
@@ -98,7 +94,6 @@ class TeamsController < ApplicationController
       end
       
       def remove_member
-        debugger
         member = @team.members.find(params[:member_id])
         if member.destroy
           flash[:notice] = "Member removed successfully."
@@ -120,9 +115,19 @@ class TeamsController < ApplicationController
     def team_params
       params.require(:team).permit(:name, :description, :owner_id, members: [])
     end
+
+
+    def authorize_owner
+      unless current_user.id == @team.owner_id
+        redirect_to teams_path, alert: 'You are not authorized to perform this action.'
+      end
+    end
   
-    def authorize_owner!
-      redirect_to teams_path, alert: 'Not authorized' unless @team.owner == current_user
+    # Check if the current user is a member of the team or the owner
+    def authorize_member
+      unless current_user.id == @team.owner_id || @team.members.include?(current_user)
+        redirect_to teams_path, alert: 'You are not authorized to view this team.'
+      end
     end
   end
   
